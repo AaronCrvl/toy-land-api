@@ -1,0 +1,6 @@
+C:\Users\aaron\source\repos\ToyLand\LibraryToyLand\bin\Debug\LibraryToyLand.dll
+C:\Users\aaron\source\repos\ToyLand\LibraryToyLand\bin\Debug\LibraryToyLand.pdb
+C:\Users\aaron\source\repos\ToyLand\LibraryToyLand\obj\Debug\LibraryToyLand.csproj.AssemblyReference.cache
+C:\Users\aaron\source\repos\ToyLand\LibraryToyLand\obj\Debug\LibraryToyLand.csproj.CoreCompileInputs.cache
+C:\Users\aaron\source\repos\ToyLand\LibraryToyLand\obj\Debug\LibraryToyLand.dll
+C:\Users\aaron\source\repos\ToyLand\LibraryToyLand\obj\Debug\LibraryToyLand.pdb
