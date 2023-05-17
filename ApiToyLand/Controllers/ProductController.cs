@@ -19,7 +19,7 @@ namespace ApiToyLand.Controllers
         #region GET
         [HttpGet]
         [EnableCors()]
-        [Route("GetProductById/{id:int}")]        
+        [Route("GetProductById/{id}")]        
         //https://localhost:44393/Product/GetProductById/
         public ActionResult GetProductById(int id)
         {
@@ -44,9 +44,8 @@ namespace ApiToyLand.Controllers
                 }                                
             }
             catch (Exception ex)
-            {                                                
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);
-                // criar log exceptions
+            {
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, $"Message: { ex.Message } {Environment.NewLine} StackTrace: {ex.StackTrace}");                
             }                    
         }
 
@@ -81,28 +80,27 @@ namespace ApiToyLand.Controllers
                     return DataResult;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);
-                // criar log exceptions
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, $"Message: { ex.Message } {Environment.NewLine} StackTrace: {ex.StackTrace}");                
             }
         }
 
         [HttpGet]
         [EnableCors()]
-        [Route("GetProductsByRegisterQuantity/{registers:int}")]
+        [Route("GetProductsByRegisterQuantity/{registers}")]
         //https://localhost:44393/Product/GetProductsByRegisterQuantity/
         public ActionResult GetProductsByRegisterQuantity(int registers = -1)
         {
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
+
+            if (registers == -1)
+                return new System.Web.Mvc.HttpStatusCodeResult(501, "Quantity parameter was not sent.");
+
             try
-            {
-                if (registers == -1)
-                    registers = 5;
-
-                HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
-                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-                HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
-
+            {                                                           
                 var list = new ListProducts().LoadProductList();
                 var finalList = FillModelList(list).AsEnumerable().OrderBy(x => x.idProduct).Take(registers);
 
@@ -118,10 +116,9 @@ namespace ApiToyLand.Controllers
                     return DataResult;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);
-                // criar log exceptions
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, $"Message: { ex.Message } {Environment.NewLine} StackTrace: {ex.StackTrace}" );
             }
         }
         #endregion
