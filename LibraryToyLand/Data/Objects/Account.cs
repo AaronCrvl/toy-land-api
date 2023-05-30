@@ -11,64 +11,113 @@ namespace LibraryToyLand.Data.Objects
     {
         #region Constructors
         public Account()
-        {            
+        {
+            this.IdAccount = -1;
+            this.Account_Name = "";
+            this.Password = "";
+            this.Active = false;
         }
-        public Account(long key) {
-            this.TxtKey = key;
+        public Account(long id)
+        {
+            Load(id);
         }
         #endregion
 
         #region Variables
-        public long IdAccount;
-        public long TxtKey;
-        public DateTime? CreationDate;
-        public DateTime? ExpireDate;
+        public int IdAccount;
+        public string Account_Name;
+        public string Password;
+        public bool Active;
         #endregion
 
-        #region Methods
-        public void Load()
+        #region Methods  
+        public void Save()
         {
-            //var sqlQuery = new StringBuilder();
-            //sqlQuery.AppendLine(" SELECT ID_PRODUCT, PRODUCT_NAME, SHORT_DESCRIPTION FROM [DBO].[PRODUCT](NOLOCK) ");
-            //sqlQuery.AppendLine($" WHERE ID_PRODUCT = {IdProduct} ");
+            try
+            {
+                var sqlQuery = new StringBuilder();
+                sqlQuery.AppendLine(" INSERT INTO [DBO].[Account] (ID_ACCOUNT, ACCOUNT_NAME, ACCOUNT_PASSWORD, ACTIVE) ");
+                sqlQuery.AppendLine($" VALUES ({GetNewId()}, '{this.Account_Name}', '{this.Password}', 1 ) ");
 
-            //var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
-            //if (obj == null)
-            //{
-            //    this.IdProduct = -1;
-            //    this.ProductName = string.Empty;
-            //    this.ShortDescription = string.Empty;
-            //}
-            //else
-            //{
-            //    this.IdProduct = obj.Field<int>("ID_PRODUCT");
-            //    this.ProductName = obj.Field<string>("PRODUCT_NAME");
-            //    this.ShortDescription = obj.Field<string>("SHORT_DESCRIPTION");
-            //}
+                Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
         }
 
-        public void LoadByKey(long key)
+        public void Load(string username, long key)
+        {
+            try
+            {
+                var sqlQuery = new StringBuilder();
+                sqlQuery.AppendLine(" SELECT ID_ACCOUNT, ACCOUNT_NAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
+                sqlQuery.AppendLine($" WHERE  ACCOUNT_NAME = '{username}' AND ACCOUNT_PASSWORD = '{key}' ");
+
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                if (obj == null)
+                {
+                    this.IdAccount = -1;
+                    this.Account_Name = "";
+                    this.Password = "";
+                    this.Active = false;
+                    return;
+                }
+                else
+                {
+                    this.IdAccount = obj.Field<int>("ID_ACCOUNT");
+                    this.Account_Name = obj.Field<string>("ACCOUNT_NAME");
+                    this.Password = obj.Field<string>("ACCOUNT_PASSWORD");
+                    this.Active = obj.Field<bool>("ACTIVE");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
+        }
+
+        public void Load(long id)
+        {
+            try
+            {
+                var sqlQuery = new StringBuilder();
+                sqlQuery.AppendLine(" SELECT ID_ACCOUNT, ACCOUNT_NAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
+                sqlQuery.AppendLine($" WHERE ID_ACCOUNT = '{id}' ");
+
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                if (obj == null)
+                {
+                    this.IdAccount = -1;
+                    this.Account_Name = "";
+                    this.Password = "";
+                    this.Active = false;
+                    return;
+                }
+                else
+                {
+                    this.IdAccount = obj.Field<int>("ID_ACCOUNT");
+                    this.Account_Name = obj.Field<string>("ACCOUNT_NAME");
+                    this.Password = obj.Field<string>("ACCOUNT_PASSWORD");
+                    this.Active = obj.Field<bool>("ACTIVE");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
+        }
+
+        private int GetNewId()
         {
             var sqlQuery = new StringBuilder();
-            sqlQuery.AppendLine(" SELECT ID_ACCOUNT, TXT_KEY, CREATION_DATE, EXPIRE_DATE FROM [DBO].[ACCOUNT](NOLOCK) ");
-            sqlQuery.AppendLine($" WHERE TXT_KEY = {key} ");
+            sqlQuery.AppendLine(" SELECT (ID_ACCOUNT+1) AS ID_ACCOUNT FROM [DBO].[ACCOUNT](NOLOCK) ");
+            sqlQuery.AppendLine($" ORDER BY ID_ACCOUNT DESC ");
 
             var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
-            if (obj == null)
-            {
-                this.IdAccount = -1;
-                this.TxtKey = -1;
-                this.CreationDate = null;
-                this.ExpireDate = null;
-                return;
-            }
-            else
-            {
-                this.IdAccount = obj.Field<int>("ID_ACCOUNT");
-                this.TxtKey = obj.Field<int>("TXT_KEY");
-                this.CreationDate = obj.Field<DateTime?>("CREATION_DATE");
-                this.ExpireDate = obj.Field<DateTime?>("EXPIRE_DATE");
-            }
+            int rowId = obj.Field<int>("ID_ACCOUNT");
+            return rowId;
         }
         #endregion
     }

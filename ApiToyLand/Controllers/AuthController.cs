@@ -1,4 +1,5 @@
-﻿using LibraryToyLand.Data.Objects;
+﻿using ApiToyLand.Models;
+using LibraryToyLand.Data.Objects;
 using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
 using System;
@@ -11,66 +12,55 @@ using System.Web.Mvc;
 namespace ApiToyLand.Controllers
 {
     public class AuthController : Controller
-    {
-        // GET: Auth
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        //[HttpGet]
-        //[EnableCors()]
-        //[Route("CheckStatus")]
-        //https://localhost:44393/Auth/CheckStatus/
-        //public ActionResult CheckStatus()
-        //{
-        //    try
-        //    {
-        //        var model = FillModel(product);
-        //        var DataResult = new ContentResult();
-        //        var jsonString = JsonConvert.SerializeObject(model);
-        //        DataResult.ContentType = "application/json";
-        //        DataResult.ContentEncoding = System.Text.Encoding.UTF8;
-        //        DataResult.Content = "{\n\"Response\": " + jsonString + "}\n";
-        //        return DataResult;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);
-        //        // criar log exceptions
-        //    }
-        //}
-
+    {        
         [HttpGet]
         [EnableCors()]
-        [Route("Validate")]
+        [Route("Validate/{username}/{key}")]
         //https://localhost:44393/Auth/Validate/
-        public ActionResult Validate(long key)
-        {
+        public ActionResult Validate(string username, long password)
+        {                      
             try
             {
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "*");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
+
                 Account ac = new Account();
-                ac.LoadByKey(key);
+                ac.Load(username, password);
 
-                if(ac.IdAccount < 0)                                                                    // BadRequest
+                if (ac.IdAccount < 0)                                                                    // BadRequest
                     return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+                
+                if (ac.IdAccount > 0 && ac.Active)                                                 // Valid
+                {                    
+                    var DataResult = new ContentResult();
+                    var jsonString = JsonConvert.SerializeObject(FillModel(ac));
+                    DataResult.ContentType = "application/json";                    
+                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;                    
+                    DataResult.Content = jsonString;                    
+                    return DataResult;
+                }
 
-                else if (ac.IdAccount > 0 && ac.TxtKey > 0 && ac.ExpireDate > DateTime.Now)             // Valid
-                    return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.Accepted);
-
-                else if (ac.IdAccount > 0 && ac.TxtKey > 0 && ac.ExpireDate < DateTime.Now)             // Expired
+                if (ac.IdAccount > 0 && !ac.Active)                                                // Expired
                     return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.Gone);
-
-                else                                                                                    // Default
-                    return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
+                
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
             }
             catch (Exception)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);
-                // criar log exceptions
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);                
             }
         }
+
         #region Validation Methods
+        AuthModel FillModel(Account account)
+        {
+            var model = new AuthModel();
+            model.IdAccount = account.IdAccount;
+            model.AccountName = account.Account_Name;         
+            return model;
+        }
         #endregion
     }
 }
