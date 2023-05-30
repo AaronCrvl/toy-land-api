@@ -18,8 +18,47 @@ public class ProductModel
         public string imageUrl;
     }
 ```
+```C#
+public class AccountModel
+    {
+        public int IdAccount;
+        public string AccountName;
+        public string Password;
+        public bool Active;
+    }
+```
+```C#
+public class AuthModel
+    {
+        public int IdAccount;
+        public string AccountName;
+    }
+```
 
-## Current Methods
+## Current Controllers Methods
+### Auth
+- Validate
+```C#
+  [HttpGet]    
+   //https://localhost:44393/Auth/Validate/
+   public ActionResult Validate(string username, long password)
+```
+### Account
+- GetAccount
+```C#
+  [HttpGet]  
+  //https://localhost:44393/Account/GetAccount/
+  public ActionResult GetAccount(int id)
+```
+
+- CreateAccount
+```C#
+ [HttpPost] 
+ //https://localhost:44393/Account/CreateAccount/
+ public ActionResult CreateAccount()
+```
+
+### Products
 - GetProductById
 ```C#
   [HttpGet]    
