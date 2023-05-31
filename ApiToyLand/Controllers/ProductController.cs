@@ -34,7 +34,7 @@ namespace ApiToyLand.Controllers
                     return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.NotFound);
                 else
                 {          
-                    var model = FillModel(product);                    
+                    var model = FillProductModel(product);                    
                     var DataResult = new ContentResult();
                     var jsonString = JsonConvert.SerializeObject(model);
                     DataResult.ContentType = "application/json";
@@ -45,8 +45,8 @@ namespace ApiToyLand.Controllers
             }
             catch (Exception ex)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, $"Message: { ex.Message } {Environment.NewLine} StackTrace: {ex.StackTrace}");                
-            }                    
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet]
@@ -62,7 +62,7 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
                 var list = new ListProducts().LoadProductList();
-                var finalList = FillModelList(list).AsEnumerable().OrderBy(x => x.idProduct);                
+                var finalList = FillProductModelList(list).AsEnumerable().OrderBy(x => x.idProduct);                
 
                 if (list.Count == 0)
                     return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
@@ -72,17 +72,13 @@ namespace ApiToyLand.Controllers
                     var jsonString = JsonConvert.SerializeObject(finalList);
                     DataResult.ContentType = "application/json";
                     DataResult.ContentEncoding = System.Text.Encoding.UTF8;
-
-                    //var LowTag = "{\n\"ResultCount\": " + finalList.Count().ToString() + ", \"Content\": " + jsonString + "}\n";
-                    //var MediumTag = "{\n\"Data\": " + LowTag + "}\n";                                        
-                    //DataResult.Content = "{\n\"Response\": " + MediumTag + "}\n";
                     DataResult.Content = jsonString;
                     return DataResult;
                 }
             }
             catch (Exception ex)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, $"Message: { ex.Message } {Environment.NewLine} StackTrace: {ex.StackTrace}");                
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -102,7 +98,7 @@ namespace ApiToyLand.Controllers
             try
             {                                                           
                 var list = new ListProducts().LoadProductList();
-                var finalList = FillModelList(list).AsEnumerable().OrderBy(x => x.idProduct).Take(registers);
+                var finalList = FillProductModelList(list).AsEnumerable().OrderBy(x => x.idProduct).Take(registers);
 
                 if (list.Count == 0)
                     return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
@@ -118,13 +114,46 @@ namespace ApiToyLand.Controllers
             }
             catch (Exception ex)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, $"Message: { ex.Message } {Environment.NewLine} StackTrace: {ex.StackTrace}" );
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [EnableCors()]
+        [Route("GetProductStock/{id}")]
+        //https://localhost:44393/Product/GetProductStock/
+        public ActionResult GetProductStock(int id)
+        {
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
+
+            try
+            {
+                var stock = new Product_Stock();
+                stock.Load(id);
+
+                if (stock.Id_Product < 0)
+                    return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+                else
+                {
+                    var DataResult = new ContentResult();
+                    var jsonString = JsonConvert.SerializeObject(FillProductStockModel(stock));
+                    DataResult.ContentType = "application/json";
+                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;
+                    DataResult.Content = jsonString;
+                    return DataResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
         #endregion
 
         #region Fill Model Methods
-        private ProductModel FillModel(Product p)
+        private ProductModel FillProductModel(Product p)
         {
             var model = new ProductModel();
             model.idProduct = p.IdProduct.ToString();
@@ -134,7 +163,7 @@ namespace ApiToyLand.Controllers
             return model;
         }
 
-        private List<ProductModel> FillModelList(List<Product> pList)
+        private List<ProductModel> FillProductModelList(List<Product> pList)
         {
             var list = new List<ProductModel>();
             foreach (Product p in pList)
@@ -147,6 +176,14 @@ namespace ApiToyLand.Controllers
                 list.Add(model);
             }
             return list;
+        }
+
+        private Product_StockModel FillProductStockModel(Product_Stock p)
+        {
+            var model = new Product_StockModel();
+            model.IdProduct = p.Id_Product;
+            model.Qtd = p.Available_Qtt;
+            return model;
         }
         #endregion
     }

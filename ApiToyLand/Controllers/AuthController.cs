@@ -47,9 +47,9 @@ namespace ApiToyLand.Controllers
                 
                 return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError);                
+                return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);                
             }
         }
 
@@ -58,7 +58,7 @@ namespace ApiToyLand.Controllers
         {
             var model = new AuthModel();
             model.IdAccount = account.IdAccount;
-            model.AccountName = account.Account_Name;         
+            model.UserName = account.USERNAME;         
             return model;
         }
         #endregion

@@ -8,7 +8,9 @@ namespace ApiToyLand.Models
     public class AccountModel
     {
         public int IdAccount;
-        public string AccountName;
+        public string FirstName;
+        public string LastName;
+        public string UserName;
         public string Password;
         public bool Active;
     }

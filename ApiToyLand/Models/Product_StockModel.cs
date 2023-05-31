@@ -5,9 +5,9 @@ using System.Web;
 
 namespace ApiToyLand.Models
 {
-    public class AuthModel
+    public class Product_StockModel
     {
-        public int IdAccount;
-        public string UserName;
+        public int IdProduct;
+        public int Qtd;
     }
 }
