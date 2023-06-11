@@ -295,6 +295,7 @@
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\AuthModel.cs" />
+    <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\Product_StockModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

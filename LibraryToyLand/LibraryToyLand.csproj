@@ -43,11 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\Transaction.cs" />
+    <Compile Include="Data\hashGenerator.cs" />
+    <Compile Include="Data\Lists\ListClientOrder.cs" />
     <Compile Include="Data\Lists\ListProducts.cs" />
     <Compile Include="Data\Objects\Account.cs" />
     <Compile Include="Data\Objects\Client_Order.cs" />
     <Compile Include="Data\Objects\Product.cs" />
+    <Compile Include="Data\Objects\Product_Order.cs" />
     <Compile Include="Data\Objects\Product_Stock.cs" />
+    <Compile Include="eNums\eStatusClientOrder.cs" />
     <Compile Include="Log\CustomException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

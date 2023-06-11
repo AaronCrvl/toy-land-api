@@ -1,5 +1,4 @@
 -- Product
---drop table Product
 CREATE TABLE Product
 (
 	ID_PRODUCT INT NOT NULL PRIMARY KEY,
@@ -26,7 +25,6 @@ VALUES (5, 'LEGO Creator', 'Build your own creations with this product, your ima
 
 
 -- Product_Stock
---drop table Product_Stock
 CREATE TABLE Product_Stock
 (
 	ID_PRODUCT INT FOREIGN KEY REFERENCES Product(ID_PRODUCT),
