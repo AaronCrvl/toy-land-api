@@ -68,27 +68,16 @@ namespace LibraryToyLand.Data.Objects
             }
         }
 
-        public void Save()
+        public int Save()
         {
+            var idCOrder = GetNewId();
             var sql = new StringBuilder();
             sql.AppendLine(" INSERT INTO [DBO].[ClientOrder] (ID_CLIENT_ORDER, ID_ACCOUNT, ID_PRODUCT, FINISHED) ");            
-            sql.AppendLine($" VALUES ({GetNewId()}), {this.idAccount}, {this.idProduct}, {this.finished} ");
+            sql.AppendLine($" VALUES ({idCOrder}, {this.idAccount}, {this.idProduct}, 0 )");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString());
-            if (obj == null)
-            {
-                this.idClientOrder = -1;
-                this.idAccount = -1;
-                this.idProduct = -1;
-                this.finished = false;
-            }
-            else
-            {
-                this.idClientOrder = obj.Field<int>("ID_CLIENT_ORDER");
-                this.idAccount = obj.Field<int>("ID_ACCOUNT");
-                this.idProduct = obj.Field<int>("ID_PRODUCT");
-                this.finished = obj.Field<bool>("FINISHED");
-            }
+            Framework.Database.Transaction.ExecuteCreateObjectCommand(sql.ToString());
+
+            return idCOrder;
         }
         private int GetNewId()
         {
@@ -97,8 +86,12 @@ namespace LibraryToyLand.Data.Objects
             sqlQuery.AppendLine($" ORDER BY ID_CLIENT_ORDER DESC ");
 
             var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
-            int rowId = obj.Field<int>("ID_CLIENT_ORDER");
-            return rowId;
+            int rowId = obj == null ? 1 : obj.Field<int>("ID_CLIENT_ORDER");
+
+            if (rowId <= 0)
+                return 1;
+            else
+                return rowId;
         }
 
     }                               

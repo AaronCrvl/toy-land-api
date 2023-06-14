@@ -107,8 +107,12 @@ namespace LibraryToyLand.Data.Objects
             sqlQuery.AppendLine($" ORDER BY ID_PRODUCT_ORDER DESC ");
 
             var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
-            int rowId = obj.Field<int>("ID_PRODUCT_ORDER");
-            return rowId;
+            int rowId = obj == null ? 1 : obj.Field<int>("ID_PRODUCT_ORDER");
+
+            if (rowId <= 0 )
+                return 1;
+            else
+                return rowId;
         }
         #endregion
     }

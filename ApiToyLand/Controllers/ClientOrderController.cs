@@ -39,16 +39,17 @@ namespace ApiToyLand.Controllers
                 {                    
                     var newClientOrder = new Client_Order();                    
                     newClientOrder.idProduct = clientOrderModel.idProduct;
-                    newClientOrder.idAccount = clientOrderModel.idAccount;
-                    newClientOrder.finished = false;
-                    newClientOrder.Save();
-                    newClientOrder.Load(newClientOrder.idAccount, newClientOrder.idProduct);
+                    newClientOrder.idAccount = clientOrderModel.idAccount;                    
+                    newClientOrder.finished = false;          
                     
                     var newProductOrder = new Product_Order();
-                    newProductOrder.ID_CLIENT_ORDER = newClientOrder.idClientOrder;
+                    newProductOrder.ID_CLIENT_ORDER = newClientOrder.Save();                    
                     newProductOrder.PRODUCT_NAME = product.ProductName;
                     newProductOrder.ID_STATUS_ORDER = (int)eStatusClientOrder.New;
+                    newProductOrder.CLIENT_LOCATION = clientOrderModel.location;
+                    newProductOrder.EMAIL = clientOrderModel.email;
                     newProductOrder.HASH_CODE = hashGenerator.Hash(DateTime.Now).ToString();
+                    newProductOrder.SaveNew();
 
                     string successMessage = $"New order created! Product {product.ProductName} on shipping for client {account.First_Name + account.Last_Name}.";
                     var DataResult = new ContentResult();
@@ -80,7 +81,12 @@ namespace ApiToyLand.Controllers
                 var finalList = FillProductModelList(list).AsEnumerable().OrderByDescending(x => x.idClientOrder);
 
                 if (list.Count == 0)
-                    return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+                {
+                    var DataResult = new ContentResult();                    
+                    DataResult.ContentType = "application/json";
+                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;                    
+                    return DataResult;
+                }
                 else
                 {
                     var DataResult = new ContentResult();
@@ -101,7 +107,7 @@ namespace ApiToyLand.Controllers
         [EnableCors()]
         [Route("GetOrder/")]
         //https://localhost:44393/Product/GetOrder/
-        public ActionResult GetClientOrder(int idAccount_, int idProduct_)
+        public ActionResult GetClientOrder(int idClientOrder)
         {
             try
             {
@@ -110,7 +116,7 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
                 var clientOrder = new Client_Order();
-                clientOrder.Load(idAccount_, idProduct_);
+                clientOrder.Load(idClientOrder);
                 var finalList = FillProductModel(clientOrder);
 
                 if (clientOrder.idClientOrder < 0)
@@ -145,7 +151,9 @@ namespace ApiToyLand.Controllers
                 var productOrder = new Product_Order();
                 productOrder.Load(p.idClientOrder);
                 model.orderHashCode = productOrder.HASH_CODE;
-                model.idProduct = productOrder.ID_STATUS_ORDER;
+                model.idStatus = productOrder.ID_STATUS_ORDER;
+                model.location = productOrder.CLIENT_LOCATION;
+                model.email = productOrder.EMAIL;
                 switch (productOrder.ID_STATUS_ORDER)
                 {
                     case 1:
@@ -176,6 +184,8 @@ namespace ApiToyLand.Controllers
             productOrder.Load(p.idClientOrder);
             model.orderHashCode = productOrder.HASH_CODE;
             model.idStatus = productOrder.ID_STATUS_ORDER;
+            model.location = productOrder.CLIENT_LOCATION;
+            model.email = productOrder.EMAIL;
             switch (productOrder.ID_STATUS_ORDER)
             {
                 case 1:

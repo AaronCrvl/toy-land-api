@@ -12,6 +12,8 @@ namespace ApiToyLand.Models
         public int idProduct;
         public int idStatus;
         public bool finished;
+        public string location;
+        public string email;
         public string productName;
         public string statusDetail;        
         public string orderHashCode;
