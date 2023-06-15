@@ -45,7 +45,7 @@ namespace LibraryToyLand.Data.Objects
             }
         }
 
-        public void Load(int idAccount, long idProduct)
+        public void LoadByAccountAndProduct(int idAccount, long idProduct)
         {
             var sql = new StringBuilder();
             sql.AppendLine(" SELECT ID_CLIENT_ORDER, ID_ACCOUNT, ID_PRODUCT, FINISHED FROM [DBO].[ClientOrder] ");

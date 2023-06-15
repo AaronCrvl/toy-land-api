@@ -36,7 +36,19 @@ namespace ApiToyLand.Controllers
                 var account = new Account(clientOrderModel.idAccount);
 
                 if (account.Active = true && !string.IsNullOrEmpty(product.ProductName))
-                {                    
+                {
+                    var orderCheck = new Client_Order();
+                    orderCheck.LoadByAccountAndProduct(clientOrderModel.idProduct, clientOrderModel.idProduct);
+                    if (orderCheck.idClientOrder > 0 && !orderCheck.finished)
+                    {
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                        var response = new ContentResult();
+                        response.Content = "You already have unfinished orders with this product on your account, check your profile page. Try again when they finish.";
+                        response.ContentType = "application/json";
+                        response.ContentEncoding = System.Text.Encoding.UTF8;
+                        return response;
+                    }
+
                     var newClientOrder = new Client_Order();                    
                     newClientOrder.idProduct = clientOrderModel.idProduct;
                     newClientOrder.idAccount = clientOrderModel.idAccount;                    
@@ -51,7 +63,7 @@ namespace ApiToyLand.Controllers
                     newProductOrder.HASH_CODE = hashGenerator.Hash(DateTime.Now).ToString();
                     newProductOrder.SaveNew();
 
-                    string successMessage = $"New order created! Product {product.ProductName} on shipping for client {account.First_Name + account.Last_Name}.";
+                    string successMessage = $"New order created! Product {product.ProductName} on shipping for client {account.First_Name + " " + account.Last_Name}.";
                     var DataResult = new ContentResult();
                     DataResult.Content = successMessage;
                     return DataResult;

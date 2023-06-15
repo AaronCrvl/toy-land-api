@@ -137,6 +137,42 @@ namespace LibraryToyLand.Data.Objects
             }            
         }
 
+        public void LoadByUsername(string userN)
+        {
+            try
+            {
+                var sqlQuery = new StringBuilder();
+                sqlQuery.AppendLine(" SELECT ID_ACCOUNT, FIRST_NAME, LAST_NAME, USERNAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
+                sqlQuery.AppendLine($" WHERE USERNAME = '{userN}'");
+
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                if (obj == null)
+                {
+                    this.IdAccount = -1;
+                    this.USERNAME = "";
+                    this.First_Name = "";
+                    this.Last_Name = "";
+                    this.Password = "";
+                    this.Active = false;
+                    return;
+                }
+                else
+                {
+                    this.IdAccount = obj.Field<int>("ID_ACCOUNT");
+                    this.USERNAME = obj.Field<string>("USERNAME");
+                    this.First_Name = obj.Field<string>("FIRST_NAME");
+                    this.Last_Name = obj.Field<string>("LAST_NAME");
+                    this.Password = obj.Field<string>("ACCOUNT_PASSWORD");
+                    this.Active = obj.Field<bool>("ACTIVE");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private int GetNewId()
         {
             var sqlQuery = new StringBuilder();
