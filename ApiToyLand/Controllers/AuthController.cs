@@ -17,7 +17,7 @@ namespace ApiToyLand.Controllers
         [EnableCors()]
         [Route("Validate/{username}/{key}")]
         //https://localhost:44393/Auth/Validate/
-        public ActionResult Validate(string username, long password)
+        public ActionResult Validate(string username, string password)
         {
             try
             {
@@ -42,12 +42,12 @@ namespace ApiToyLand.Controllers
 
                 if (ac.IdAccount > 0 && ac.Active)                                                
                 {
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                    var res200 = new ContentResult();
-                    res200.Content = $"Hi {ac.USERNAME}!";
-                    res200.ContentType = "application/json";
-                    res200.ContentEncoding = System.Text.Encoding.UTF8;
-                    return res200;
+                    var DataResult = new ContentResult();
+                    var jsonString = JsonConvert.SerializeObject(FillModel(ac));
+                    DataResult.ContentType = "application/json";
+                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;
+                    DataResult.Content = jsonString;
+                    return DataResult;
                 }
 
                 if (ac.IdAccount > 0 && !ac.Active)                                              

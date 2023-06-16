@@ -38,7 +38,7 @@ namespace ApiToyLand.Controllers
                 if (account.Active = true && !string.IsNullOrEmpty(product.ProductName))
                 {
                     var orderCheck = new Client_Order();
-                    orderCheck.LoadByAccountAndProduct(clientOrderModel.idProduct, clientOrderModel.idProduct);
+                    orderCheck.LoadByAccountAndProduct(clientOrderModel.idAccount, clientOrderModel.idProduct);
                     if (orderCheck.idClientOrder > 0 && !orderCheck.finished)
                     {
                         HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;

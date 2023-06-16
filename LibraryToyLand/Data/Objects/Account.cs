@@ -56,7 +56,8 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine($" UPDATE [DBO].[Account] SET FIRST_NAME = '{this.First_Name}', LAST_NAME = '{this.Last_Name}', USERNAME = '{this.USERNAME}', ACCOUNT_PASSWORD = '{this.Password}' ");                
+                sqlQuery.AppendLine($" UPDATE [DBO].[Account] SET FIRST_NAME = '{this.First_Name}', LAST_NAME = '{this.Last_Name}', USERNAME = '{this.USERNAME}', ACCOUNT_PASSWORD = '{this.Password}' ");
+                sqlQuery.AppendLine($" WHERE ID_ACCOUNT = {this.IdAccount}");
                 Framework.Database.Transaction.ExecuteUpdateObjectCommand(sqlQuery.ToString());
             }
             catch (Exception ex)
@@ -65,13 +66,13 @@ namespace LibraryToyLand.Data.Objects
             }
         }
 
-        public void Load(string username, long key)
+        public void Load(string username, string password)
         {
             try
             {
                 var sqlQuery = new StringBuilder();
                 sqlQuery.AppendLine(" SELECT ID_ACCOUNT, FIRST_NAME, LAST_NAME, USERNAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
-                sqlQuery.AppendLine($" WHERE  USERNAME = '{username}' AND ACCOUNT_PASSWORD = '{key}' ");
+                sqlQuery.AppendLine($" WHERE  USERNAME = '{username}' AND ACCOUNT_PASSWORD = '{password}' ");
 
                 var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
                 if (obj == null)

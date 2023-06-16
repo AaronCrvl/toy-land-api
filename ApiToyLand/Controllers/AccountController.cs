@@ -159,6 +159,7 @@ namespace ApiToyLand.Controllers
                 ac.Last_Name = userAccount.LastName;
                 ac.Password = userAccount.Password;
                 ac.Active = true;
+                ac.Save();
 
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 var response = new ContentResult();

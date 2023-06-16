@@ -1,0 +1,16 @@
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\DatabaseToyLand.exe
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\DatabaseToyLand.deps.json
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\DatabaseToyLand.runtimeconfig.json
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\DatabaseToyLand.runtimeconfig.dev.json
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\DatabaseToyLand.dll
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\ref\DatabaseToyLand.dll
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\bin\Debug\net5.0\DatabaseToyLand.pdb
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.csproj.AssemblyReference.cache
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.AssemblyInfoInputs.cache
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.AssemblyInfo.cs
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.csproj.CoreCompileInputs.cache
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.dll
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\ref\DatabaseToyLand.dll
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.pdb
+C:\Users\aaron\source\repos\ToyLand\ConsoleToyLand\obj\Debug\net5.0\DatabaseToyLand.genruntimeconfig.cache
