@@ -87,10 +87,15 @@ namespace LibraryToyLand.Data.Objects
         public void Load()
         {            
             var sqlQuery = new StringBuilder();
-            sqlQuery.AppendLine(" SELECT ID_PRODUCT, PRODUCT_NAME, SHORT_DESCRIPTION, IMAGE_URL FROM [DBO].[PRODUCT](NOLOCK) ");
-            sqlQuery.AppendLine($" WHERE ID_PRODUCT = {IdProduct} ");
+            sqlQuery.AppendLine(" SELECT ");
+            sqlQuery.AppendLine(" ID_PRODUCT, ");
+            sqlQuery.AppendLine(" PRODUCT_NAME, ");
+            sqlQuery.AppendLine(" SHORT_DESCRIPTION, ");
+            sqlQuery.AppendLine(" IMAGE_URL ");
+            sqlQuery.AppendLine(" FROM [DBO].[PRODUCT](NOLOCK) ");
+            sqlQuery.AppendLine($" WHERE ID_PRODUCT = @ID_PRODUCT ");
             
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { "@ID_PRODUCT", IdProduct.ToString() });
             if (obj == null)
             {
                 this.IdProduct = -1;

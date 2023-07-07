@@ -25,10 +25,15 @@ namespace LibraryToyLand.Data.Objects
         public void Load(int idClientOrder)
         {
             var sql = new StringBuilder();
-            sql.AppendLine(" SELECT ID_CLIENT_ORDER, ID_ACCOUNT, ID_PRODUCT, FINISHED FROM [DBO].[ClientOrder] ");
-            sql.AppendLine($" WHERE ID_CLIENT_ORDER = {idClientOrder} ");
+            sql.AppendLine(" SELECT ");
+            sql.AppendLine(" ID_CLIENT_ORDER, ");
+            sql.AppendLine(" ID_ACCOUNT, ");
+            sql.AppendLine(" ID_PRODUCT, ");
+            sql.AppendLine(" FINISHED ");
+            sql.AppendLine(" FROM [DBO].[ClientOrder] ");
+            sql.AppendLine(" WHERE ID_CLIENT_ORDER = @ID_CLIENT_ORDER ");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString(), new string[] { "@ID_CLIENT_ORDER", idClientOrder.ToString() });
             if (obj == null)
             {
                 this.idClientOrder = -1;
@@ -48,10 +53,20 @@ namespace LibraryToyLand.Data.Objects
         public void LoadByAccountAndProduct(int idAccount, long idProduct)
         {
             var sql = new StringBuilder();
-            sql.AppendLine(" SELECT ID_CLIENT_ORDER, ID_ACCOUNT, ID_PRODUCT, FINISHED FROM [DBO].[ClientOrder] ");
-            sql.AppendLine($" WHERE ID_ACCOUNT = {idAccount} AND ID_PRODUCT = {idProduct} ");
+            sql.AppendLine(" SELECT ");
+            sql.AppendLine(" ID_CLIENT_ORDER, ");
+            sql.AppendLine(" ID_ACCOUNT, ");
+            sql.AppendLine(" ID_PRODUCT, ");
+            sql.AppendLine(" FINISHED ");
+            sql.AppendLine(" FROM [DBO].[ClientOrder] ");
+            sql.AppendLine($" WHERE ID_ACCOUNT = @ID_ACCOUNT AND ID_PRODUCT = @ID_PRODUCT ");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString(), new string[] 
+            { 
+                "@ID_ACCOUNT", idAccount.ToString(),
+                "@ID_PRODUCT", idProduct.ToString()
+            });
+
             if (obj == null)
             {
                 this.idClientOrder = -1;
@@ -70,22 +85,30 @@ namespace LibraryToyLand.Data.Objects
 
         public int Save()
         {
-            var idCOrder = GetNewId();
+            var idClientOrder = GetNewId();
             var sql = new StringBuilder();
-            sql.AppendLine(" INSERT INTO [DBO].[ClientOrder] (ID_CLIENT_ORDER, ID_ACCOUNT, ID_PRODUCT, FINISHED) ");            
-            sql.AppendLine($" VALUES ({idCOrder}, {this.idAccount}, {this.idProduct}, 0 )");
+            sql.AppendLine(" INSERT INTO [DBO].[ClientOrder] ");
+            sql.AppendLine(" ( ID_CLIENT_ORDER, ");
+            sql.AppendLine(" ID_ACCOUNT, ");
+            sql.AppendLine(" ID_PRODUCT, ");
+            sql.AppendLine(" FINISHED ) ");            
+            sql.AppendLine($" VALUES ({idClientOrder}, @ID_ACCOUNT, @ID_PRODUCT, 0 )");
 
-            Framework.Database.Transaction.ExecuteCreateObjectCommand(sql.ToString());
+            Framework.Database.Transaction.ExecuteCreateObjectCommand(sql.ToString(), new string[] 
+            { "@ID_ACCOUNT", this.idAccount.ToString(),
+                "@ID_PRODUCT", this.idProduct.ToString()
+            });
 
-            return idCOrder;
+            return idClientOrder;
         }
+
         private int GetNewId()
         {
             var sqlQuery = new StringBuilder();
             sqlQuery.AppendLine(" SELECT (ID_CLIENT_ORDER+1) AS ID_CLIENT_ORDER FROM [DBO].[ClientOrder](NOLOCK) ");
             sqlQuery.AppendLine($" ORDER BY ID_CLIENT_ORDER DESC ");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { });
             int rowId = obj == null ? 1 : obj.Field<int>("ID_CLIENT_ORDER");
 
             if (rowId <= 0)

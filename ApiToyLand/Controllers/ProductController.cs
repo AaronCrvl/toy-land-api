@@ -16,7 +16,7 @@ namespace ApiToyLand.Controllers
 {
     public class ProductController : Controller
     {        
-        #region GET
+        #region Endpoints
         [HttpGet]
         [EnableCors()]
         [Route("GetProductById/{id}")]        
@@ -152,7 +152,7 @@ namespace ApiToyLand.Controllers
         }
         #endregion
 
-        #region Fill Model Methods
+        #region Methods
         private ProductModel FillProductModel(Product p)
         {
             var model = new ProductModel();

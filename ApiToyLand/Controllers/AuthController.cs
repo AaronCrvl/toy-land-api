@@ -37,7 +37,6 @@ namespace ApiToyLand.Controllers
                     res404.ContentType = "application/json";
                     res404.ContentEncoding = System.Text.Encoding.UTF8;
                     return res404;
-
                 }
 
                 if (ac.IdAccount > 0 && ac.Active)                                                
@@ -78,7 +77,7 @@ namespace ApiToyLand.Controllers
         {
             var model = new AuthModel();
             model.IdAccount = account.IdAccount;
-            model.UserName = account.USERNAME;
+            model.UserName = account.Username;
             return model;
         }
         #endregion

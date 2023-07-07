@@ -37,8 +37,16 @@ namespace LibraryToyLand.Data.Objects
             {
                 var sqlQuery = new StringBuilder();
                 sqlQuery.AppendLine(" INSERT INTO [DBO].[ProductOrder] (ID_PRODUCT_ORDER, ID_CLIENT_ORDER, ID_STATUS_ORDER, PRODUCT_NAME, EMAIL, CLIENT_LOCATION, HASH_CODE) ");
-                sqlQuery.AppendLine($" VALUES ({GetNewId()}, {this.ID_CLIENT_ORDER}, {this.ID_STATUS_ORDER}, '{this.PRODUCT_NAME}', '{this.EMAIL}', '{this.CLIENT_LOCATION}', '{this.HASH_CODE}') ");
-                Framework.Database.Transaction.ExecuteCreateObjectCommand(sqlQuery.ToString());
+                sqlQuery.AppendLine($" VALUES ({GetNewId()}, @ID_CLIENT_ORDER, @ID_STATUS_ORDER, @PRODUCT_NAME, @EMAIL, @CLIENT_LOCATION, @HASH_CODE ");
+                
+                Framework.Database.Transaction.ExecuteCreateObjectCommand(sqlQuery.ToString(), new string[]
+                { "@ID_CLIENT_ORDER", this.ID_CLIENT_ORDER.ToString(),
+                    "@ID_STATUS_ORDER", this.ID_STATUS_ORDER.ToString(),
+                    "@PRODUCT_NAME", this.PRODUCT_NAME,
+                    "@EMAIL", this.EMAIL,
+                    "@CLIENT_LOCATION", this.CLIENT_LOCATION,
+                    "HASH_CODE", this.HASH_CODE
+                });
             }
             catch (Exception ex)
             {
@@ -51,10 +59,23 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine($" UPDATE [DBO].[ProductOrder] ");
-                sqlQuery.AppendLine($" SET ID_STATUS_ORDER = {this.ID_STATUS_ORDER}, PRODUCT_NAME = '{this.PRODUCT_NAME}', EMAIL = '{this.EMAIL}', CLIENT_LOCATION = '{this.CLIENT_LOCATION}', HASH_CODE = '{this.HASH_CODE}'");
-                sqlQuery.AppendLine($" WHERE ID_PRODUCT_ORDER = {this.ID_CLIENT_ORDER} ");
-                Framework.Database.Transaction.ExecuteUpdateObjectCommand(sqlQuery.ToString());
+                sqlQuery.AppendLine(" UPDATE [DBO].[ProductOrder] ");
+                sqlQuery.AppendLine(" SET ID_STATUS_ORDER = @ID_STATUS_ORDER, ");
+                sqlQuery.AppendLine(" PRODUCT_NAME = @PRODUCT_NAME, ");
+                sqlQuery.AppendLine(" EMAIL = @EMAIL, ");
+                sqlQuery.AppendLine(" CLIENT_LOCATION = @CLIENT_LOCATION, ");
+                sqlQuery.AppendLine(" HASH_CODE = @HASH_CODE ");
+                sqlQuery.AppendLine(" WHERE ID_PRODUCT_ORDER = @ID_PRODUCT_ORDER ");
+
+                Framework.Database.Transaction.ExecuteUpdateObjectCommand(sqlQuery.ToString(), new string[]
+                {
+                    "@ID_STATUS_ORDER", this.ID_STATUS_ORDER.ToString(),
+                    "@PRODUCT_NAME", this.PRODUCT_NAME,
+                    "@EMAIL", this.EMAIL,
+                    "@CLIENT_LOCATION", this.CLIENT_LOCATION,
+                    "@HASH_CODE", this.HASH_CODE,
+                    "@ID_PRODUCT_ORDER", this.ID_PRODUCT_ORDER.ToString()
+                });
             }
             catch (Exception ex)
             {
@@ -67,10 +88,18 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine(" SELECT ID_PRODUCT_ORDER, ID_CLIENT_ORDER, ID_STATUS_ORDER, PRODUCT_NAME, EMAIL, CLIENT_LOCATION, HASH_CODE FROM [DBO].[ProductOrder](NOLOCK) ");
-                sqlQuery.AppendLine($" WHERE  ID_CLIENT_ORDER = {idClientOrder} ");
+                sqlQuery.AppendLine(" SELECT ");
+                sqlQuery.AppendLine(" ID_PRODUCT_ORDER, ");
+                sqlQuery.AppendLine(" ID_CLIENT_ORDER, ");
+                sqlQuery.AppendLine(" ID_STATUS_ORDER, ");
+                sqlQuery.AppendLine(" PRODUCT_NAME, ");
+                sqlQuery.AppendLine(" EMAIL, ");
+                sqlQuery.AppendLine(" CLIENT_LOCATION, ");
+                sqlQuery.AppendLine(" HASH_CODE ");
+                sqlQuery.AppendLine(" FROM [DBO].[ProductOrder](NOLOCK) ");
+                sqlQuery.AppendLine(" WHERE  ID_CLIENT_ORDER = @ID_CLIENT_ORDER ");
 
-                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { "@ID_CLIENT_ORDER", idClientOrder.ToString() });
                 if (obj == null)
                 {
                     this.ID_PRODUCT_ORDER = -1;
@@ -106,7 +135,7 @@ namespace LibraryToyLand.Data.Objects
             sqlQuery.AppendLine(" SELECT (ID_PRODUCT_ORDER+1) AS ID_PRODUCT_ORDER FROM [DBO].[ProductOrder](NOLOCK) ");
             sqlQuery.AppendLine($" ORDER BY ID_PRODUCT_ORDER DESC ");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { });
             int rowId = obj == null ? 1 : obj.Field<int>("ID_PRODUCT_ORDER");
 
             if (rowId <= 0 )

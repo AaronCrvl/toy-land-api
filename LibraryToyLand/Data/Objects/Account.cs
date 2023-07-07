@@ -15,7 +15,7 @@ namespace LibraryToyLand.Data.Objects
             this.IdAccount = -1;
             this.First_Name = "";
             this.Last_Name = "";
-            this.USERNAME = "";
+            this.Username = "";
             this.Password = "";
             this.Active = false;
         }
@@ -29,7 +29,7 @@ namespace LibraryToyLand.Data.Objects
         public int IdAccount;
         public string First_Name;
         public string Last_Name;
-        public string USERNAME;
+        public string Username;
         public string Password;
         public bool Active;
         #endregion
@@ -38,12 +38,19 @@ namespace LibraryToyLand.Data.Objects
         public void SaveNew()
         {
             try
-            {
+            {                
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine(" INSERT INTO [DBO].[Account] (ID_ACCOUNT, USERNAME, ACCOUNT_PASSWORD, ACTIVE) ");
-                sqlQuery.AppendLine($" VALUES ({GetNewId()}, '{this.USERNAME}', '{this.Password}', 1 ) ");
+                sqlQuery.AppendLine(" INSERT INTO [DBO].[Account] ");
+                sqlQuery.AppendLine(" ( ID_ACCOUNT, ");
+                sqlQuery.AppendLine(" USERNAME, ");
+                sqlQuery.AppendLine(" ACCOUNT_PASSWORD, ");
+                sqlQuery.AppendLine(" ACTIVE ) ");
+                sqlQuery.AppendLine($" VALUES ({GetNewId()}, @USERNAME, @PASSWORD, 1 ) ");               
 
-                Framework.Database.Transaction.ExecuteCreateObjectCommand(sqlQuery.ToString());
+                Framework.Database.Transaction.ExecuteCreateObjectCommand(sqlQuery.ToString(), new string[] 
+                { "@USERNAME", this.Username.ToString(), 
+                    "@PASSWORD", this.Password.ToString() 
+                });
             }
             catch (Exception ex)
             {
@@ -56,9 +63,16 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine($" UPDATE [DBO].[Account] SET FIRST_NAME = '{this.First_Name}', LAST_NAME = '{this.Last_Name}', USERNAME = '{this.USERNAME}', ACCOUNT_PASSWORD = '{this.Password}' ");
-                sqlQuery.AppendLine($" WHERE ID_ACCOUNT = {this.IdAccount}");
-                Framework.Database.Transaction.ExecuteUpdateObjectCommand(sqlQuery.ToString());
+                sqlQuery.AppendLine($" UPDATE [DBO].[Account] SET FIRST_NAME = @FIRST_NAME, LAST_NAME = @LAST_NAME, USERNAME = @USERNAME, ACCOUNT_PASSWORD = @ACCOUNT_PASSWORD ");
+                sqlQuery.AppendLine($" WHERE ID_ACCOUNT = @ID_ACCOUNT ");
+                Framework.Database.Transaction.ExecuteUpdateObjectCommand(sqlQuery.ToString(), new string[]
+                {
+                    "@FIRST_NAME", this.First_Name,
+                    "@LAST_NAME", this.Last_Name,
+                    "@USERNAME", this.Username,
+                    "@ACCOUNT_PASSWORD", this.Password,
+                    "@ID_ACCOUNT", this.IdAccount.ToString()
+                });
             }
             catch (Exception ex)
             {
@@ -71,14 +85,26 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine(" SELECT ID_ACCOUNT, FIRST_NAME, LAST_NAME, USERNAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
-                sqlQuery.AppendLine($" WHERE  USERNAME = '{username}' AND ACCOUNT_PASSWORD = '{password}' ");
+                sqlQuery.AppendLine(" SELECT ");
+                sqlQuery.AppendLine(" ID_ACCOUNT, ");
+                sqlQuery.AppendLine(" FIRST_NAME, ");
+                sqlQuery.AppendLine(" LAST_NAME, ");
+                sqlQuery.AppendLine(" USERNAME, ");
+                sqlQuery.AppendLine(" ACCOUNT_PASSWORD, ");
+                sqlQuery.AppendLine(" ACTIVE ");
+                sqlQuery.AppendLine(" FROM [DBO].[ACCOUNT](NOLOCK) ");
+                sqlQuery.AppendLine(" WHERE  USERNAME = @USERNAME AND ACCOUNT_PASSWORD = @ACCOUNT_PASSWORD ");
 
-                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] 
+                {
+                    "@USERNAME", username,
+                    "@ACCOUNT_PASSWORD", password
+                });
+
                 if (obj == null)
                 {
                     this.IdAccount = -1;
-                    this.USERNAME = "";
+                    this.Username = "";
                     this.First_Name = "";
                     this.Last_Name = "";
                     this.Password = "";
@@ -88,7 +114,7 @@ namespace LibraryToyLand.Data.Objects
                 else
                 {
                     this.IdAccount = obj.Field<int>("ID_ACCOUNT");
-                    this.USERNAME = obj.Field<string>("USERNAME");
+                    this.Username = obj.Field<string>("USERNAME");
                     this.First_Name = obj.Field<string>("FIRST_NAME");
                     this.Last_Name = obj.Field<string>("LAST_NAME");
                     this.Password = obj.Field<string>("ACCOUNT_PASSWORD");
@@ -107,14 +133,21 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine(" SELECT ID_ACCOUNT, FIRST_NAME, LAST_NAME, USERNAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
-                sqlQuery.AppendLine($" WHERE ID_ACCOUNT = '{id}' ");
+                sqlQuery.AppendLine(" SELECT ");
+                sqlQuery.AppendLine(" ID_ACCOUNT, ");
+                sqlQuery.AppendLine(" FIRST_NAME, ");
+                sqlQuery.AppendLine(" LAST_NAME, ");
+                sqlQuery.AppendLine(" USERNAME, ");
+                sqlQuery.AppendLine(" ACCOUNT_PASSWORD, ");
+                sqlQuery.AppendLine(" ACTIVE ");
+                sqlQuery.AppendLine(" FROM [DBO].[ACCOUNT](NOLOCK) ");
+                sqlQuery.AppendLine(" WHERE ID_ACCOUNT = @ID_ACCOUNT ");
 
-                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { "@ID_ACCOUNT", id.ToString() });
                 if (obj == null)
                 {
                     this.IdAccount = -1;
-                    this.USERNAME = "";
+                    this.Username = "";
                     this.First_Name = "";
                     this.Last_Name = "";
                     this.Password = "";
@@ -124,7 +157,7 @@ namespace LibraryToyLand.Data.Objects
                 else
                 {
                     this.IdAccount = obj.Field<int>("ID_ACCOUNT");
-                    this.USERNAME = obj.Field<string>("USERNAME");
+                    this.Username = obj.Field<string>("USERNAME");
                     this.First_Name = obj.Field<string>("FIRST_NAME");
                     this.Last_Name = obj.Field<string>("LAST_NAME");
                     this.Password = obj.Field<string>("ACCOUNT_PASSWORD");
@@ -143,14 +176,21 @@ namespace LibraryToyLand.Data.Objects
             try
             {
                 var sqlQuery = new StringBuilder();
-                sqlQuery.AppendLine(" SELECT ID_ACCOUNT, FIRST_NAME, LAST_NAME, USERNAME, ACCOUNT_PASSWORD, ACTIVE FROM [DBO].[ACCOUNT](NOLOCK) ");
-                sqlQuery.AppendLine($" WHERE USERNAME = '{userN}'");
+                sqlQuery.AppendLine(" SELECT ");
+                sqlQuery.AppendLine(" ID_ACCOUNT, ");
+                sqlQuery.AppendLine(" FIRST_NAME, ");
+                sqlQuery.AppendLine(" LAST_NAME, ");
+                sqlQuery.AppendLine(" USERNAME, ");
+                sqlQuery.AppendLine(" ACCOUNT_PASSWORD, ");
+                sqlQuery.AppendLine(" ACTIVE ");
+                sqlQuery.AppendLine(" FROM [DBO].[ACCOUNT](NOLOCK) ");
+                sqlQuery.AppendLine(" WHERE USERNAME = @USERNAME ");
 
-                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+                var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { "@USERNAME", userN });
                 if (obj == null)
                 {
                     this.IdAccount = -1;
-                    this.USERNAME = "";
+                    this.Username = "";
                     this.First_Name = "";
                     this.Last_Name = "";
                     this.Password = "";
@@ -160,7 +200,7 @@ namespace LibraryToyLand.Data.Objects
                 else
                 {
                     this.IdAccount = obj.Field<int>("ID_ACCOUNT");
-                    this.USERNAME = obj.Field<string>("USERNAME");
+                    this.Username = obj.Field<string>("USERNAME");
                     this.First_Name = obj.Field<string>("FIRST_NAME");
                     this.Last_Name = obj.Field<string>("LAST_NAME");
                     this.Password = obj.Field<string>("ACCOUNT_PASSWORD");
@@ -180,7 +220,7 @@ namespace LibraryToyLand.Data.Objects
             sqlQuery.AppendLine(" SELECT (ID_ACCOUNT+1) AS ID_ACCOUNT FROM [DBO].[ACCOUNT](NOLOCK) ");
             sqlQuery.AppendLine($" ORDER BY ID_ACCOUNT DESC ");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sqlQuery.ToString(), new string[] { });
             int rowId = obj.Field<int>("ID_ACCOUNT");
             return rowId;
         }

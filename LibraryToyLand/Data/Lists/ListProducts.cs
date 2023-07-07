@@ -26,7 +26,7 @@ namespace LibraryToyLand.Data.Lists
                 var list = new List<Product>();
 
                 sqlQuery.AppendLine(" SELECT ID_PRODUCT, PRODUCT_NAME, SHORT_DESCRIPTION, IMAGE_URL FROM [dbo].[Product] ORDER BY PRODUCT_NAME; ");
-                data = Framework.Database.Transaction.ExecuteSelectListOfObjectCommand(sqlQuery.ToString()).Tables[0];
+                data = Framework.Database.Transaction.ExecuteSelectListOfObjectCommand(sqlQuery.ToString(), new string[] { }).Tables[0];
                 foreach (DataRow product in data.Rows)
                 {
                     var objProduct = new Product();

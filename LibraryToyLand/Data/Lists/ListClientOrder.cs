@@ -27,7 +27,7 @@ namespace LibraryToyLand.Data.Lists
                 sql.AppendLine(" SELECT ID_CLIENT_ORDER, ID_ACCOUNT, ID_PRODUCT, FINISHED FROM [DBO].[ClientOrder](nolock) ");
                 sql.AppendLine($" WHERE ID_ACCOUNT = {idAccount}");
 
-                data = Framework.Database.Transaction.ExecuteSelectListOfObjectCommand(sql.ToString()).Tables[0];
+                data = Framework.Database.Transaction.ExecuteSelectListOfObjectCommand(sql.ToString(), new string[] { }).Tables[0];
                 foreach (DataRow clientOrder in data.Rows)
                 {
                     var objClientOrder = new Client_Order();

@@ -44,9 +44,11 @@
   <ItemGroup>
     <Compile Include="Database\Transaction.cs" />
     <Compile Include="Data\hashGenerator.cs" />
+    <Compile Include="Data\Lists\ListClientCart.cs" />
     <Compile Include="Data\Lists\ListClientOrder.cs" />
     <Compile Include="Data\Lists\ListProducts.cs" />
     <Compile Include="Data\Objects\Account.cs" />
+    <Compile Include="Data\Objects\ClientCart.cs" />
     <Compile Include="Data\Objects\Client_Order.cs" />
     <Compile Include="Data\Objects\Product.cs" />
     <Compile Include="Data\Objects\Product_Order.cs" />

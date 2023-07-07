@@ -95,7 +95,7 @@ namespace ApiToyLand.Controllers
 
                 // sucess
                 Account ac = new Account();
-                ac.USERNAME = newAccount.Username;
+                ac.Username = newAccount.Username;
                 ac.First_Name = newAccount.FirstName;
                 ac.Last_Name = newAccount.LastName;
                 ac.Password = newAccount.Password;
@@ -109,7 +109,7 @@ namespace ApiToyLand.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [EnableCors()]
         [Route("AlterAccount/")]
         //https://localhost:44393/Account/AlterAccount/
@@ -154,7 +154,7 @@ namespace ApiToyLand.Controllers
                 Account ac = new Account();
                 ac.Load(userAccount.IdAccount);
 
-                ac.USERNAME = userAccount.UserName;
+                ac.Username = userAccount.UserName;
                 ac.First_Name = userAccount.FirstName;
                 ac.Last_Name = userAccount.LastName;
                 ac.Password = userAccount.Password;
@@ -174,14 +174,14 @@ namespace ApiToyLand.Controllers
             }
         }
 
-        #region Validation Methods
+        #region Methods
         AccountModel FillModel(Account account)
         {
             var model = new AccountModel();
             model.IdAccount = account.IdAccount;
             model.FirstName = account.First_Name;
             model.LastName = account.Last_Name;
-            model.UserName = account.USERNAME;
+            model.UserName = account.Username;
             model.Password = account.Password;
             model.Active = account.Active;
             return model;

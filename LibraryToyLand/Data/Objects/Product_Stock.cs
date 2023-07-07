@@ -37,10 +37,13 @@ namespace LibraryToyLand.Data.Objects
         public void Load(int Id)
         {
             var sql = new StringBuilder();
-            sql.AppendLine(" SELECT ID_PRODUCT, AVAILABLE_QNTT FROM [DBO].[Product_Stock](NOLOCK) ");
-            sql.AppendLine($" WHERE ID_PRODUCT = {Id} ");
+            sql.AppendLine(" SELECT ");
+            sql.AppendLine(" ID_PRODUCT, ");
+            sql.AppendLine(" AVAILABLE_QNTT ");
+            sql.AppendLine(" FROM [DBO].[Product_Stock](NOLOCK) ");
+            sql.AppendLine($" WHERE ID_PRODUCT = @ID_PRODUCT ");
 
-            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString());
+            var obj = Framework.Database.Transaction.ExecuteSelectSingleObjectCommand(sql.ToString(), new string[] { "@ID_PRODUCT", Id.ToString()});
             if (obj == null)
             {
                 this.AvailableQtt = -1;

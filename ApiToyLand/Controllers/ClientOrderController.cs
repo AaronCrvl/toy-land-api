@@ -149,6 +149,7 @@ namespace ApiToyLand.Controllers
             }
         }
 
+        #region Methods
         private List<Client_OrderModel> FillProductModelList(List<Client_Order> pList)
         {
             var list = new List<Client_OrderModel>();
@@ -190,7 +191,7 @@ namespace ApiToyLand.Controllers
             model.idClientOrder = p.idClientOrder;
             model.idProduct = p.idProduct;
             model.finished = p.finished;
-            model.productName = new Product(p.idProduct).ProductName;            
+            model.productName = new Product(p.idProduct).ProductName;
 
             var productOrder = new Product_Order();
             productOrder.Load(p.idClientOrder);
@@ -212,5 +213,6 @@ namespace ApiToyLand.Controllers
             }
             return model;
         }
+        #endregion        
     }
 }
