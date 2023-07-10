@@ -80,7 +80,7 @@ namespace ApiToyLand.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         [EnableCors()]
         [Route("RemoveProductFromCart/{idAccount}/{idProduct}")]
         public ActionResult RemoveProductFromCart(int idAccount, int idProduct)
