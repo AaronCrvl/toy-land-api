@@ -162,3 +162,4 @@ C:\Users\aaron\source\repos\ToyLand\ApiToyLand\bin\System.Text.Json.xml
 C:\Users\aaron\source\repos\ToyLand\ApiToyLand\bin\System.ValueTuple.xml
 C:\Users\aaron\source\repos\ToyLand\ApiToyLand\bin\Microsoft.AspNetCore.Cors.dll
 C:\Users\aaron\source\repos\ToyLand\ApiToyLand\bin\Microsoft.AspNetCore.Cors.xml
+C:\Users\aaron\source\repos\ToyLand\ApiToyLand\bin\LibraryToyLand.dll.config

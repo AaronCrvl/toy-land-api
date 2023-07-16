@@ -53,7 +53,7 @@ namespace ApiToyLand.Controllers
 
                         case 200:
                             var DataResult = new ContentResult();
-                            var jsonString = JsonConvert.SerializeObject(FillModel(ac));
+                            var jsonString = JsonConvert.SerializeObject(FillModel(ac.GetData()));
                             DataResult.ContentType = "application/json";
                             DataResult.ContentEncoding = System.Text.Encoding.UTF8;
                             DataResult.Content = jsonString;

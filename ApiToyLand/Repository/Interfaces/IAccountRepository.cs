@@ -18,5 +18,6 @@ namespace ApiToyLand.Repository.Interfaces
         bool testUsername(string username);
         bool Validate(newAccountModel model);
         bool Validate(AccountModel model);
+        string GetAccountName(int id);
     }
 }

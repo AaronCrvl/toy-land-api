@@ -1,4 +1,5 @@
 ﻿using ApiToyLand.Models;
+using ApiToyLand.Repository;
 using LibraryToyLand.Data;
 using LibraryToyLand.Data.Lists;
 using LibraryToyLand.Data.Objects;
@@ -31,43 +32,29 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
                 var result = new StreamReader(HttpContext.Request.InputStream).ReadToEnd();
-                var clientOrderModel = JsonConvert.DeserializeObject<Client_OrderModel>(result);
+                var clientOrderModel = JsonConvert.DeserializeObject<Client_OrderModel>(result);                
+                
+                var clientRepo = new ClientOrderRepository();
+                var productRepo = new ProductRepository();
+                var accountRepo = new AccountRepository();
 
-                var product = new Product(clientOrderModel.idProduct);
-                var account = new Account(clientOrderModel.idAccount);
-
-                if (account.Active = true && !string.IsNullOrEmpty(product.ProductName))
+                var responseStatus = clientRepo.CreateProductOrder(clientOrderModel);
+                if (responseStatus == 200)
                 {
-                    var orderCheck = new Client_Order();
-                    orderCheck.LoadByAccountAndProduct(clientOrderModel.idAccount, clientOrderModel.idProduct);
-                    if (orderCheck.idClientOrder > 0 && !orderCheck.finished)
-                    {
-                        HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
-                        var response = new ContentResult();
-                        response.Content = "You already have unfinished orders with this product on your account, check your profile page. Try again when they finish.";
-                        response.ContentType = "application/json";
-                        response.ContentEncoding = System.Text.Encoding.UTF8;
-                        return response;
-                    }
-
-                    var newClientOrder = new Client_Order();
-                    newClientOrder.idProduct = clientOrderModel.idProduct;
-                    newClientOrder.idAccount = clientOrderModel.idAccount;
-                    newClientOrder.finished = false;
-
-                    var newProductOrder = new Product_Order();
-                    newProductOrder.ID_CLIENT_ORDER = newClientOrder.Save();
-                    newProductOrder.PRODUCT_NAME = product.ProductName;
-                    newProductOrder.ID_STATUS_ORDER = (int)eStatusClientOrder.New;
-                    newProductOrder.CLIENT_LOCATION = clientOrderModel.location;
-                    newProductOrder.EMAIL = clientOrderModel.email;
-                    newProductOrder.HASH_CODE = hashGenerator.Hash(DateTime.Now).ToString();
-                    newProductOrder.SaveNew();
-
-                    string successMessage = $"New order created! Product {product.ProductName} on shipping for client {account.First_Name + " " + account.Last_Name}.";
+                    string successMessage = $"New order created! Product {productRepo.GetProductName(clientOrderModel.idProduct)} on shipping for client {accountRepo.GetAccountName(clientOrderModel.idAccount)}.";
                     var DataResult = new ContentResult();
                     DataResult.Content = successMessage;
                     return DataResult;
+                }
+
+                if(responseStatus == 409)
+                {
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    var response = new ContentResult();
+                    response.Content = "Please select another username.";
+                    response.ContentType = "application/json";
+                    response.ContentEncoding = System.Text.Encoding.UTF8;
+                    return response;
                 }
 
                 return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.NotFound);

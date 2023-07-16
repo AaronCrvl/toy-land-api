@@ -303,11 +303,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AccountRepository.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
-    <Compile Include="Repository\IAccountRepository.cs" />
-    <Compile Include="Repository\IAuthRepository.cs" />
+    <Compile Include="Repository\ClientCartRepository.cs" />
+    <Compile Include="Repository\ClientOrderRepository.cs" />
+    <Compile Include="Repository\Interfaces\IAccountRepository.cs" />
+    <Compile Include="Repository\Interfaces\IAuthRepository.cs" />
+    <Compile Include="Repository\Interfaces\IClientCartRepository.cs" />
+    <Compile Include="Repository\Interfaces\IClientOrderRepository.cs" />
+    <Compile Include="Repository\Interfaces\IProductRepository.cs" />
+    <Compile Include="Repository\ProductRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Assets\github-mark-white.png" />
+    <Content Include="Assets\github-mark.png" />
+    <Content Include="Assets\scary-monster-white.png" />
+    <Content Include="Assets\scary-monster-yellow.png" />
+    <Content Include="Assets\scary-monster.png" />
+    <Content Include="Assets\toyland-logo-black.png" />
+    <Content Include="Assets\toyland-logo.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />

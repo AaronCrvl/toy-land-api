@@ -11,6 +11,7 @@ using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using System;
 using Microsoft.AspNetCore.Cors;
+using ApiToyLand.Repository;
 
 namespace ApiToyLand.Controllers
 {
@@ -29,7 +30,7 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
-                var product = new Product(id);                       
+                var product = new ProductRepository().GetProductById(id);
                 if (product.IdProduct < 0)                                                                           
                     return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.NotFound);
                 else
@@ -61,7 +62,8 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
-                var list = new ListProducts().LoadProductList();
+                var productRepository = new ProductRepository();
+                var list = productRepository.GetAllProducts();
                 var finalList = FillProductModelList(list).AsEnumerable().OrderBy(x => x.idProduct);                
 
                 if (list.Count == 0)
@@ -96,8 +98,9 @@ namespace ApiToyLand.Controllers
                 return new System.Web.Mvc.HttpStatusCodeResult(501, "Quantity parameter was not sent.");
 
             try
-            {                                                           
-                var list = new ListProducts().LoadProductList();
+            {
+                var productRepository = new ProductRepository();
+                var list = productRepository.GetAllProducts();
                 var finalList = FillProductModelList(list).AsEnumerable().OrderBy(x => x.idProduct).Take(registers);
 
                 if (list.Count == 0)
@@ -130,9 +133,8 @@ namespace ApiToyLand.Controllers
 
             try
             {
-                var stock = new Product_Stock();
-                stock.Load(id);
-
+                var repo = new ProductRepository();
+                var stock = repo.GetProductStock(id);
                 if (stock.Id_Product < 0)
                     return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
                 else

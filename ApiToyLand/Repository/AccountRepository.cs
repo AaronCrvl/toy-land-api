@@ -104,6 +104,15 @@ namespace ApiToyLand.Repository
             else
                 return false;
         }
+
+        public string GetAccountName(int id)
+        {
+            var account = new Account(id);
+            if (id > 0)
+                return account.First_Name + " " + account.Last_Name;
+            else
+                return "Account Not Found";
+        }
         #endregion
     }
 }
