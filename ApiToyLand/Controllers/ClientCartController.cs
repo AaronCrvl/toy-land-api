@@ -9,6 +9,7 @@ using LibraryToyLand.Data.Objects;
 using LibraryToyLand.Data.Lists;
 using ApiToyLand.Models;
 using Newtonsoft.Json;
+using ApiToyLand.Repository;
 
 namespace ApiToyLand.Controllers
 {
@@ -27,7 +28,8 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
-                var success = ClientCart.AddProductToCart(idAccount, idProduct);
+                var ClientCartRepo = new ClientCartRepository();
+                var success = ClientCartRepo.AddToCart(idAccount, idProduct);
                 if (success)
                 {
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -65,13 +67,14 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
+                var ClientCartRepo = new ClientCartRepository();
                 int count = ClientCart.GetCartCount(idAccount);
-
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                
                 var res200 = new ContentResult();
                 res200.Content = count.ToString();
                 res200.ContentType = "application/json";
                 res200.ContentEncoding = System.Text.Encoding.UTF8;
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 return res200;
             }
             catch (Exception ex)
@@ -130,7 +133,8 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
-                var list = new ListClientCart().LoadProductList(idAccount);
+                var ClientCartRepo = new ClientCartRepository();
+                var list = ClientCartRepo.GetCartProducts(idAccount);
                 var finalList = FillProductModelList(list).AsEnumerable().OrderBy(x => x.idProduct);
 
                 if (list.Count == 0)

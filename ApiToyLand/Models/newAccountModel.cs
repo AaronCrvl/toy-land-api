@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ApiToyLand.Controllers
+namespace ApiToyLand.Models
 {
     public class newAccountModel
     {

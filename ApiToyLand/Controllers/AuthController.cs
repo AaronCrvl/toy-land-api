@@ -1,4 +1,5 @@
 ﻿using ApiToyLand.Models;
+using ApiToyLand.Repository;
 using LibraryToyLand.Data.Objects;
 using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ namespace ApiToyLand.Controllers
 {
     public class AuthController : Controller
     {
+        #region Endpoints
         [HttpGet]
         [EnableCors()]
         [Route("Validate/{username}/{key}")]
@@ -26,37 +28,40 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
-                Account ac = new Account();
-                ac.Load(username, password);
+                AuthRepository ac = new AuthRepository();
+                var logged = ac.LogIn(username, password);
 
-                if (ac.IdAccount < 0)                                                                   
+                if (logged)
                 {
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    var res404 = new ContentResult();
-                    res404.Content = "Account not found.";
-                    res404.ContentType = "application/json";
-                    res404.ContentEncoding = System.Text.Encoding.UTF8;
-                    return res404;
-                }
+                    switch (ac.Validate())
+                    {
+                        case 404:
+                            HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                            var res404 = new ContentResult();
+                            res404.Content = "Account not found.";
+                            res404.ContentType = "application/json";
+                            res404.ContentEncoding = System.Text.Encoding.UTF8;
+                            return res404;
 
-                if (ac.IdAccount > 0 && ac.Active)                                                
-                {
-                    var DataResult = new ContentResult();
-                    var jsonString = JsonConvert.SerializeObject(FillModel(ac));
-                    DataResult.ContentType = "application/json";
-                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;
-                    DataResult.Content = jsonString;
-                    return DataResult;
-                }
+                        case 401:
+                            HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            var res401 = new ContentResult();
+                            res401.Content = "This account is deactivated.";
+                            res401.ContentType = "application/json";
+                            res401.ContentEncoding = System.Text.Encoding.UTF8;
+                            return res401;
 
-                if (ac.IdAccount > 0 && !ac.Active)                                              
-                {
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    var res401 = new ContentResult();
-                    res401.Content = "This account is deactivated.";
-                    res401.ContentType = "application/json";
-                    res401.ContentEncoding = System.Text.Encoding.UTF8;
-                    return res401;
+                        case 200:
+                            var DataResult = new ContentResult();
+                            var jsonString = JsonConvert.SerializeObject(FillModel(ac));
+                            DataResult.ContentType = "application/json";
+                            DataResult.ContentEncoding = System.Text.Encoding.UTF8;
+                            DataResult.Content = jsonString;
+                            return DataResult;
+
+                        default:
+                            break;
+                    }
                 }
 
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -71,6 +76,7 @@ namespace ApiToyLand.Controllers
                 return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        #endregion      
 
         #region Validation Methods
         AuthModel FillModel(Account account)

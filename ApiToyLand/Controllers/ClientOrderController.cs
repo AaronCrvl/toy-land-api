@@ -17,6 +17,7 @@ namespace ApiToyLand.Controllers
 {
     public class ClientOrderController : Controller
     {
+        #region Endpoints
         [HttpPost]
         [EnableCors()]
         [Route("CreateProductOrder/")]
@@ -28,7 +29,7 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
-                
+
                 var result = new StreamReader(HttpContext.Request.InputStream).ReadToEnd();
                 var clientOrderModel = JsonConvert.DeserializeObject<Client_OrderModel>(result);
 
@@ -49,13 +50,13 @@ namespace ApiToyLand.Controllers
                         return response;
                     }
 
-                    var newClientOrder = new Client_Order();                    
+                    var newClientOrder = new Client_Order();
                     newClientOrder.idProduct = clientOrderModel.idProduct;
-                    newClientOrder.idAccount = clientOrderModel.idAccount;                    
-                    newClientOrder.finished = false;          
-                    
+                    newClientOrder.idAccount = clientOrderModel.idAccount;
+                    newClientOrder.finished = false;
+
                     var newProductOrder = new Product_Order();
-                    newProductOrder.ID_CLIENT_ORDER = newClientOrder.Save();                    
+                    newProductOrder.ID_CLIENT_ORDER = newClientOrder.Save();
                     newProductOrder.PRODUCT_NAME = product.ProductName;
                     newProductOrder.ID_STATUS_ORDER = (int)eStatusClientOrder.New;
                     newProductOrder.CLIENT_LOCATION = clientOrderModel.location;
@@ -94,9 +95,9 @@ namespace ApiToyLand.Controllers
 
                 if (list.Count == 0)
                 {
-                    var DataResult = new ContentResult();                    
+                    var DataResult = new ContentResult();
                     DataResult.ContentType = "application/json";
-                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;                    
+                    DataResult.ContentEncoding = System.Text.Encoding.UTF8;
                     return DataResult;
                 }
                 else
@@ -148,6 +149,7 @@ namespace ApiToyLand.Controllers
                 return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        #endregion       
 
         #region Methods
         private List<Client_OrderModel> FillProductModelList(List<Client_Order> pList)
@@ -184,7 +186,6 @@ namespace ApiToyLand.Controllers
             }
             return list;
         }
-
         private Client_OrderModel FillProductModel(Client_Order p)
         {
             var model = new Client_OrderModel();
