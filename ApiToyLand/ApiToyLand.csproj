@@ -319,6 +319,7 @@
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Assets\github-mark-white.png" />
     <Content Include="Assets\github-mark.png" />
+    <Content Include="Assets\Main.jpg" />
     <Content Include="Assets\scary-monster-white.png" />
     <Content Include="Assets\scary-monster-yellow.png" />
     <Content Include="Assets\scary-monster.png" />

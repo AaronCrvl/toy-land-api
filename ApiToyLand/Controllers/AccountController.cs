@@ -29,10 +29,10 @@ namespace ApiToyLand.Controllers
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "*");
 
-                AccountRepository ac = new AccountRepository();
+                AuthRepository ac = new AuthRepository();
                 if (ac.LogIn(id))
                 {
-                    if (ac.Auth.IdAccount <= 0)
+                    if (ac.GetData().IdAccount <= 0)
                         return new System.Web.Mvc.HttpStatusCodeResult((int)HttpStatusCode.NotFound);
 
                     var DataResult = new ContentResult();
