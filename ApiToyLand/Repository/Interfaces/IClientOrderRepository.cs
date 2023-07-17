@@ -11,5 +11,7 @@ namespace ApiToyLand.Repository.Interfaces
     public interface IClientOrderRepository
     {        
         int CreateProductOrder(Client_OrderModel model);
+        Client_OrderModel GetOrder(int idAccount, int idProduct);
+        List<Client_OrderModel> GetOrderList(int idAccount);
     }
 }

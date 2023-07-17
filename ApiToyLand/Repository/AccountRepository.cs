@@ -10,6 +10,7 @@ namespace ApiToyLand.Repository
 {
     public class AccountRepository : IAccountRepository
     {
+        private AuthRepository _Auth;
         #region Constructor
         public AccountRepository()
         {
@@ -20,8 +21,8 @@ namespace ApiToyLand.Repository
         #region Properties
         public AuthRepository Auth
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => this._Auth = new AuthRepository();
+            set => this._Auth = value;
         }
         #endregion
 
