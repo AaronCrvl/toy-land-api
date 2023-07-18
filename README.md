@@ -3,7 +3,7 @@ This is an API project, this solution was made mainly for integration porpuses w
 
 # Home Page
 
-![Main Page](https://github.com/AaronCrvl/toy-land-api/blob/main/src/assets/Main.jpg?raw=true)
+![Main Page](https://github.com/AaronCrvl/toy-land-api/blob/main/ApiToyLand/Assets/Main.jpg?raw=true)
 
 ## Database
 
